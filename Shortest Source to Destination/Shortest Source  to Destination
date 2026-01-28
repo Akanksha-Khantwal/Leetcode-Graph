@@ -1,0 +1,42 @@
+
+class Solution {
+  public:
+    bool valid(int i,int j,int n,int m){
+            return i>=0 &&j>=0&&i<n&&j<m;
+    }
+    int shortestDistance(int N, int M, vector<vector<int>> A, int X, int Y) {
+        int row[4]={-1,1,0,0};
+        int col[4]={0,0,-1,1};
+        if (A[0][0] == 0 || A[X][Y] == 0)
+         return -1;
+
+
+       if (X == 0 && Y == 0)
+        return 0;
+        
+       vector<vector<bool>>visited(N,vector<bool>(M,0));
+       queue<pair<int, pair<int,int>>> q;
+       q.push({0,{0,0}});
+       visited[0][0]=1;
+       while(!q.empty()){
+           int i=q.front().first;
+           int j=q.front().second.first;
+           int step=q.front().second.second;
+           q.pop();
+           for(int k=0;k<4;k++){
+               int newi=i+row[k];
+               int newj=j+col[k];
+               if(valid(newi,newj,N,M) &&A[newi][newj]&&!visited[newi][newj]){
+                   if(newi==X && newj==Y)
+                   return step+1;
+                   visited[newi][newj]=1;
+                   q.push({newi,{newj,step+1}});
+               }
+            }
+           
+       }
+       return -1;
+       
+        
+    }
+};
