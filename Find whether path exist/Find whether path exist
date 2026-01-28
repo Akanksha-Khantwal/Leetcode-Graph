@@ -1,0 +1,50 @@
+
+class Solution {
+  public:
+  int row[4]={-1,1,0,0};
+  int col[4]={0,0,-1,1};
+    bool valid(int i,int j,int n){
+        return i>=0&&j>=0 &&i<n &&j<n;
+    }
+    // Function to find whether a path exists from the source to destination.
+    bool is_Possible(vector<vector<int>>& grid) {
+        int n=grid.size();
+       queue<pair<int,int>>q;
+       vector<pair<int,int>>s;
+       vector<pair<int,int>>d;
+       for(int i=0;i<grid.size();i++){
+           for(int j=0;j<grid[i].size();j++){
+               if(grid[i][j]==1){
+                   s.push_back({i,j});
+                   grid[i][j]=0;
+               }
+               if(grid[i][j]==2){
+                   d.push_back({i,j});
+               }
+               
+           }
+       }
+       q.push({s[0].first,s[0].second});
+       
+       while(!q.empty()){
+           int i=q.front().first;
+           int j=q.front().second;
+           q.pop();
+           for(int k=0;k<4;k++){
+               int newi=i+row[k];
+               int newj=j+col[k];
+               if(newi==d[0].first && newj==d[0].second)
+               return 1;
+               if(valid(newi,newj,n)&& grid[newi][newj]==3){
+                   grid[newi][newj]=0;
+                   q.push({newi,newj});
+                   
+               }
+               
+           }
+       }
+       return 0;
+       
+        
+    }
+};
