@@ -1,0 +1,47 @@
+// User function Template for C++
+
+class Solution {
+  public:
+  
+    void DFS(int node, vector<int> adj[], vector<bool> &visited) {
+        visited[node] = true;
+        for(int v : adj[node]) {
+            if(!visited[v]) {
+                DFS(v, adj, visited);
+            }
+        }
+    }
+  
+    int isCircle(vector<string> &arr) {
+        vector<int> adj[26];
+        vector<int> indegree(26, 0), outdegree(26, 0);
+
+        // Build graph
+        for(string s : arr) {
+            int u = s[0] - 'a';
+            int v = s[s.size() - 1] - 'a';
+            adj[u].push_back(v);
+            outdegree[u]++;
+            indegree[v]++;
+        }
+
+        // Check in-degree == out-degree
+        for(int i = 0; i < 26; i++) {
+            if(indegree[i] != outdegree[i])
+                return 0;
+        }
+
+        // DFS for connectivity
+        vector<bool> visited(26, false);
+        int start = arr[0][0] - 'a';
+        DFS(start, adj, visited);
+
+        // Check all used vertices are connected
+        for(int i = 0; i < 26; i++) {
+            if(indegree[i] > 0 && !visited[i])
+                return 0;
+        }
+
+        return 1; // Circle exists
+    }
+};
