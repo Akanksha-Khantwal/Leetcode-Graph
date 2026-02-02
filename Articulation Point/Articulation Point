@@ -1,0 +1,55 @@
+class Solution {
+  public:
+  void DFS(int node, int par, vector<int> adj[],
+           vector<bool>& visited, vector<int>& disc,
+           vector<int>& low, vector<bool>& arti, int& timer) {
+
+      visited[node] = 1;
+      disc[node] = low[node] = timer++;
+      int child = 0;
+
+      for(int j = 0; j < adj[node].size(); j++){
+          int neig = adj[node][j];
+
+          if(neig == par) continue;
+
+          if(visited[neig]) {
+              low[node] = min(low[node], disc[neig]);
+          } else {
+              child++;
+              DFS(neig, node, adj, visited, disc, low, arti, timer);
+              low[node] = min(low[node], low[neig]);
+
+              if(low[neig] >= disc[node] && par != -1){
+                  arti[node] = 1;
+              }
+          }
+      }
+
+      if(par == -1 && child > 1){
+          arti[node] = 1;
+      }
+  }
+
+  vector<int> articulationPoints(int V, vector<int> adj[]) {
+
+      vector<bool> arti(V, false);
+      vector<int> disc(V), low(V);
+      vector<bool> visited(V, false);
+
+      int timer = 0;
+      for(int i = 0; i < V; i++){
+          if(!visited[i]){
+              DFS(i, -1, adj, visited, disc, low, arti, timer);
+          }
+      }
+
+      vector<int> ans;
+      for(int i = 0; i < V; i++){
+          if(arti[i]) ans.push_back(i);
+      }
+
+      if(ans.size() == 0) return {-1};
+      return ans;
+  }
+};
